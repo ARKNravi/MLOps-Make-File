@@ -1,12 +1,16 @@
-.PHONY: all data train evaluate deploy clean
+.PHONY: all install data train evaluate deploy clean
 
 # Use PowerShell as the shell
 SHELL := powershell.exe
 .SHELLFLAGS := -NoProfile -Command
 
-all: data train evaluate deploy
+all: install data train evaluate deploy
 
-data:
+install:
+	@echo "Installing dependencies..."
+	pip install pandas scikit-learn joblib matplotlib seaborn
+
+data: install
 	@echo "Preparing data..."
 	python scripts/data_prep.py
 
