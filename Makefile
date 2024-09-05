@@ -1,34 +1,39 @@
-.PHONY: all install data train evaluate deploy clean
+.PHONY: all env data train evaluate deploy clean
 
-# Use PowerShell as the shell
-SHELL := powershell.exe
-.SHELLFLAGS := -NoProfile -Command
+# Define the conda environment name
+CONDA_ENV := mlops-makefile
 
-all: install data train evaluate deploy
+# Define the conda activation command for Windows
+CONDA_ACTIVATE := call activate $(CONDA_ENV)
 
-install:
-	@echo "Installing dependencies..."
-	pip install pandas scikit-learn joblib matplotlib seaborn
+all: env data train evaluate deploy
 
-data: install
+env:
+	@echo "Checking Conda environment..."
+	@conda info --envs | findstr /i "$(CONDA_ENV)" > nul && \
+	(echo Environment already exists) || \
+	(echo Creating Conda environment... && conda env create -f environment.yml)
+
+data: env
 	@echo "Preparing data..."
-	python scripts/data_prep.py
+	$(CONDA_ACTIVATE) && python scripts/data_prep.py
 
 train: data
 	@echo "Training model..."
-	python scripts/train_model.py
+	$(CONDA_ACTIVATE) && python scripts/train_model.py
 
 evaluate: train
 	@echo "Evaluating model..."
-	python scripts/evaluate_model.py
+	$(CONDA_ACTIVATE) && python scripts/evaluate_model.py
 
 deploy: evaluate
 	@echo "Deploying model..."
-	python scripts/deploy_model.py
+	$(CONDA_ACTIVATE) && python scripts/deploy_model.py
 
 clean:
 	@echo "Cleaning up..."
-	if (Test-Path data/processed) { Remove-Item -Recurse -Force data/processed/* }
-	if (Test-Path models) { Remove-Item -Recurse -Force models/* }
-	if (Test-Path results) { Remove-Item -Recurse -Force results/* }
-	if (Test-Path deployment) { Remove-Item -Recurse -Force deployment/* }
+	if exist data\processed rmdir /s /q data\processed
+	if exist models rmdir /s /q models
+	if exist results rmdir /s /q results
+	if exist deployment rmdir /s /q deployment
+	conda env remove -n $(CONDA_ENV)
