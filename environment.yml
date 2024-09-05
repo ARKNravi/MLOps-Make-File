@@ -1,0 +1,14 @@
+name: mlops-makefile
+channels:
+    - defaults
+    - conda-forge
+dependencies:
+    - python=3.8
+    - pandas
+    - scikit-learn
+    - joblib
+    - matplotlib
+    - seaborn
+    - pip
+    - pip:
+          - make
