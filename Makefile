@@ -17,7 +17,7 @@ env:
 	(echo Creating Conda environment... && conda env create -f environment.yml)
 
 # Ensure necessary directories exist
-setup_dirs:
+setup_dirs: env
 	@echo "Creating necessary directories..."
 	@if not exist data\raw mkdir data\raw
 	@if not exist data\processed mkdir data\processed
@@ -27,7 +27,7 @@ setup_dirs:
 	@if not exist scripts mkdir scripts
 
 # Prepare the data
-data: env
+data: setup_dirs
 	@echo "Preparing data..."
 	$(CONDA_ACTIVATE) && python scripts/data_prep.py
 
