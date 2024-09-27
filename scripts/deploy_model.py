@@ -5,6 +5,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix, classification_report
 import seaborn as sns
+import mlflow
 
 def deploy_model():
     # Create deployment directory if it doesn't exist
@@ -48,6 +49,25 @@ def test_deployed_model():
     sample_input = X_test.iloc[0].values.reshape(1, -1)
     prediction = model.predict(sample_input)
     print(f"Sample prediction: {prediction}")
+
+    # Log artifacts with MLflow
+
+    # Set the tracking URI to SQLite
+    mlflow.set_tracking_uri("sqlite:///C:/Recovery/Project/MLOpsSemester5/MLOps-Make-File/mlflow.db")
+
+    # Use the same experiment name
+    experiment_name = "iris_classification"
+    experiment = mlflow.get_experiment_by_name(experiment_name)
+
+    # If the experiment doesn't exist, create it
+    if experiment is None:
+        experiment_id = mlflow.create_experiment(experiment_name)
+    else:
+        experiment_id = experiment.experiment_id
+
+    with mlflow.start_run(experiment_id=experiment_id):
+        mlflow.log_artifact('deployment/confusion_matrix.png', 'confusion_matrix')
+        mlflow.log_artifact('deployment/classification_report.txt', 'classification_report')
 
 if __name__ == "__main__":
     deploy_model()
