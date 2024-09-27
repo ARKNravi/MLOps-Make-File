@@ -1,4 +1,4 @@
-.PHONY: all env data train evaluate deploy clean setup_dirs
+.PHONY: all env data train evaluate deploy clean setup_dirs mlflow_server
 
 # Define the conda environment name
 CONDA_ENV := mlops-makefile
@@ -25,6 +25,7 @@ setup_dirs: env
 	@if not exist results mkdir results
 	@if not exist deployment mkdir deployment
 	@if not exist scripts mkdir scripts
+	@if not exist mlruns mkdir mlruns
 
 # Prepare the data
 data: setup_dirs
@@ -46,6 +47,11 @@ deploy: evaluate
 	@echo "Deploying model..."
 	$(CONDA_ACTIVATE) && python scripts/deploy_model.py
 
+# Start MLflow tracking server
+mlflow_server:
+	@echo "Starting MLflow tracking server..."
+	powershell -Command "Start-Process powershell -ArgumentList '-NoExit', '-Command', 'conda activate mlops-makefile; python mlflow_tracking_server.py'"
+
 # Clean up directories and remove the environment
 clean:
 	@echo "Cleaning up..."
@@ -53,4 +59,5 @@ clean:
 	if exist models rmdir /s /q models
 	if exist results rmdir /s /q results
 	if exist deployment rmdir /s /q deployment
+	if exist mlruns rmdir /s /q mlruns
 	conda env remove -n $(CONDA_ENV)
