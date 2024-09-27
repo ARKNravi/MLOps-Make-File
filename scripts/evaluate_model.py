@@ -2,6 +2,11 @@ import pandas as pd
 import joblib
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 import json
+import mlflow
+import os
+
+# Use SQLite as the backend tracking URI (ensure the correct path to 'mlflow.db')
+mlflow.set_tracking_uri("sqlite:///C:/Recovery/Project/MLOpsSemester5/MLOps-Make-File/mlflow.db")
 
 # Load the model and test data
 model = joblib.load('models/iris_model.joblib')
@@ -19,8 +24,13 @@ metrics = {
     'f1_score': f1_score(y_test, y_pred, average='weighted')
 }
 
-# Save metrics
+# Save metrics locally
 with open('results/model_metrics.json', 'w') as f:
     json.dump(metrics, f)
 
-print("Model evaluation completed. Metrics saved to results/model_metrics.json")
+# Start an MLflow run using SQLite for experiment tracking
+with mlflow.start_run():
+    for metric_name, metric_value in metrics.items():
+        mlflow.log_metric(metric_name, metric_value)
+
+print("Model evaluation completed. Metrics saved to results/model_metrics.json and logged with MLflow.")
