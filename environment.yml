@@ -3,6 +3,7 @@ channels:
     - defaults
     - conda-forge
 dependencies:
+    - sqlite
     - python=3.8
     - pandas
     - scikit-learn
@@ -11,4 +12,5 @@ dependencies:
     - seaborn
     - pip
     - pip:
+          - mlflow
           - make
