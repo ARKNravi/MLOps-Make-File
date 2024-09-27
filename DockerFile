@@ -1,0 +1,23 @@
+# Gunakan Python sebagai base image
+FROM continuumio/miniconda3
+
+# Set working directory di dalam kontainer
+WORKDIR /app
+
+# Salin environment.yml untuk mengatur dependensi
+COPY environment.yml .
+
+# Buat environment berdasarkan environment.yml
+RUN conda env create -f environment.yml
+
+# Aktifkan environment di container
+SHELL ["conda", "run", "-n", "mlops-makefile", "/bin/bash", "-c"]
+
+# Install Make (untuk menjalankan make commands)
+RUN apt-get update && apt-get install -y make
+
+# Salin seluruh isi proyek ke container
+COPY . .
+
+# Set default command untuk menjalankan Makefile
+CMD ["make", "all"]
