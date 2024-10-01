@@ -16,13 +16,8 @@ RUN conda env list | grep mlops-makefile || conda env create -f environment.yml 
 # Make RUN commands use the new environment
 SHELL ["conda", "run", "-n", "mlops-makefile", "/bin/bash", "-c"]
 
-# Create the entrypoint script
-RUN echo '#!/bin/bash\n\
-source activate mlops-makefile\n\
-make all\n\
-mlflow ui --backend-store-uri sqlite:///mlflow.db --host 0.0.0.0 --port 5000' > /entrypoint.sh
-
-# Make the entrypoint script executable
+# Copy the entrypoint script
+COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 # Set the entrypoint
