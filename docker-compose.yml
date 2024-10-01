@@ -1,8 +1,10 @@
-version: "3"
+version: '3'
 services:
-    mlops:
-        build: .
-        container_name: mlops-container
-        ports:
-            - "5000:5000"
-        command: make all
+  mlops-makefile:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+    environment:
+      - PYTHONUNBUFFERED=1
