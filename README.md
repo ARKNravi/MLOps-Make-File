@@ -47,7 +47,7 @@ This will:
 Once everything is up and running, you can access the MLflow UI by navigating to:
 
 ```
-http://localhost:5000
+http://localhost:8080
 ```
 
 ### 4. Stopping the Services
@@ -76,13 +76,13 @@ The `docker-compose.yml` file defines the services to be run:
 
 - **mlops-app**: The main application.
   - **build**: Builds the Docker image from the local `Dockerfile`.
-  - **ports**: Exposes the app on port `8080`.
+  - **ports**: Exposes the app on port `5000`.
   - **volumes**: Mounts the current directory into the container.
   - **environment**: Specifies the MLflow tracking URI for SQLite.
   
 - **mlflow**: MLflow service for experiment tracking.
   - **image**: Uses Miniconda to install MLflow.
-  - **ports**: Exposes MLflow on port `5000`.
+  - **ports**: Exposes MLflow on port `8080`.
   - **volumes**: Mounts the current directory for the database and artifacts.
   - **working_dir**: Sets the working directory to `/app`.
   - **command**: Starts MLflow, ensures the SQLite database is upgraded, and serves the MLflow UI.
