@@ -7,11 +7,11 @@ services:
     volumes:
       - .:/app
     environment:
-      - MLFLOW_TRACKING_URI=sqlite:////app/mlflow.db  # Use four slashes for absolute path
+      - MLFLOW_TRACKING_URI=sqlite:////app/mlflow.db
     command: ["/entrypoint.sh"]
-  
+
   mlflow:
-    image: continuumio/miniconda3  # Use Miniconda or a base image that has Conda
+    image: continuumio/miniconda3
     ports:
       - "5000:5000"
     volumes:
@@ -19,4 +19,4 @@ services:
     working_dir: /app
     environment:
       - MLFLOW_TRACKING_URI=sqlite:////app/mlflow.db
-    command: mlflow ui --backend-store-uri sqlite:///mlflow.db --host 0.0.0.0 --port 5000
+    command: /bin/bash -c "conda install mlflow -y && mlflow db upgrade sqlite:///mlflow.db && mlflow ui --backend-store-uri sqlite:///mlflow.db --host 0.0.0.0 --port 5000"
