@@ -1,23 +1,24 @@
-# Gunakan Python sebagai base image
+# Use an official Miniconda image as the base
 FROM continuumio/miniconda3
 
-# Set working directory di dalam kontainer
+# Set the working directory in the container
 WORKDIR /app
 
-# Salin environment.yml untuk mengatur dependensi
-COPY environment.yml .
+# Install git and make
+RUN apt-get update && apt-get install -y git make
 
-# Buat environment berdasarkan environment.yml
-RUN conda env create -f environment.yml
+# Clone the GitHub repository if it doesn't exist, otherwise pull the latest changes
+RUN git clone https://github.com/ARKNravi/MLOps-Make-File.git . || git pull
 
-# Aktifkan environment di container
+# Create the Conda environment if it doesn't exist, otherwise update it
+RUN conda env create -f environment.yml || conda env update -f environment.yml
+
+# Make RUN commands use the new environment
 SHELL ["conda", "run", "-n", "mlops-makefile", "/bin/bash", "-c"]
 
-# Install Make (untuk menjalankan make commands)
-RUN apt-get update && apt-get install -y make
+# Copy the entrypoint script
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
-# Salin seluruh isi proyek ke container
-COPY . .
-
-# Set default command untuk menjalankan Makefile
-CMD ["make", "all"]
+# Set the entrypoint
+ENTRYPOINT ["/entrypoint.sh"]
