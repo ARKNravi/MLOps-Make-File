@@ -7,17 +7,23 @@ WORKDIR /app
 # Install git and make
 RUN apt-get update && apt-get install -y git make
 
-# Clone the GitHub repository when building the container
-RUN git clone https://github.com/ARKNravi/MLOps-Make-File.git .
+# Clone the GitHub repository if it doesn't exist, otherwise pull the latest changes
+RUN git clone https://github.com/ARKNravi/MLOps-Make-File.git . || git pull
 
-# Install dependencies from environment.yml
-RUN conda env create -f environment.yml || conda env update -f environment.yml
+# Check if environment exists before creating
+RUN conda env list | grep mlops-makefile || conda env create -f environment.yml || conda env update -f environment.yml
 
 # Make RUN commands use the new environment
 SHELL ["conda", "run", "-n", "mlops-makefile", "/bin/bash", "-c"]
 
-# Use the cloned entrypoint.sh and ensure it's executable
-RUN chmod +x entrypoint.sh
+# Create the entrypoint script
+RUN echo '#!/bin/bash\n\
+source activate mlops-makefile\n\
+make all\n\
+mlflow ui --backend-store-uri sqlite:///mlflow.db --host 0.0.0.0 --port 5000' > /entrypoint.sh
+
+# Make the entrypoint script executable
+RUN chmod +x /entrypoint.sh
 
 # Set the entrypoint
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT ["/entrypoint.sh"]
