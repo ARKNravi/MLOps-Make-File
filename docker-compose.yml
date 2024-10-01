@@ -3,18 +3,20 @@ services:
   mlops-app:
     build: .
     ports:
-      - "8080:8080"  # Serve MLflow UI on port 8080 externally
+      - "8080:5000"
+    volumes:
+      - .:/app
     environment:
       - MLFLOW_TRACKING_URI=sqlite:////app/mlflow.db
-    command: ["/bin/bash", "-c", "./entrypoint.sh"]
+    command: ["/entrypoint.sh"]
 
   mlflow:
     image: continuumio/miniconda3
     ports:
-      - "8080:8080"  # Bind to port 8080
+      - "5000:5000"
     volumes:
       - .:/app
     working_dir: /app
     environment:
       - MLFLOW_TRACKING_URI=sqlite:////app/mlflow.db
-    command: /bin/bash -c "conda install mlflow -y && mlflow db upgrade sqlite:///mlflow.db && mlflow ui --backend-store-uri sqlite:///mlflow.db --host 0.0.0.0 --port 8080"
+    command: /bin/bash -c "conda install mlflow -y && mlflow db upgrade sqlite:///mlflow.db && mlflow ui --backend-store-uri sqlite:///mlflow.db --host 0.0.0.0 --port 5000"
