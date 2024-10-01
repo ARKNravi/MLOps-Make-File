@@ -6,7 +6,7 @@ import mlflow
 import os
 
 # Use SQLite as the backend tracking URI (ensure the correct path to 'mlflow.db')
-mlflow.set_tracking_uri("sqlite:///C:/Recovery/Project/MLOpsSemester5/MLOps-Make-File/mlflow.db")
+mlflow.set_tracking_uri(os.getenv("MLFLOW_TRACKING_URI", "sqlite:///mlflow.db"))
 
 # Load the model and test data
 model = joblib.load('models/iris_model.joblib')
@@ -23,6 +23,9 @@ metrics = {
     'recall': recall_score(y_test, y_pred, average='weighted'),
     'f1_score': f1_score(y_test, y_pred, average='weighted')
 }
+
+# Ensure results directory exists
+os.makedirs('results', exist_ok=True)
 
 # Save metrics locally
 with open('results/model_metrics.json', 'w') as f:

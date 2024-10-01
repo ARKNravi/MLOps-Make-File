@@ -2,6 +2,10 @@ import pandas as pd
 from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
+import os
+
+# Ensure output directory exists
+os.makedirs('data/processed', exist_ok=True)
 
 # Load the Iris dataset
 iris = load_iris()

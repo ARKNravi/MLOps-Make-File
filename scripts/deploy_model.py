@@ -51,9 +51,7 @@ def test_deployed_model():
     print(f"Sample prediction: {prediction}")
 
     # Log artifacts with MLflow
-
-    # Set the tracking URI to SQLite
-    mlflow.set_tracking_uri("sqlite:///C:/Recovery/Project/MLOpsSemester5/MLOps-Make-File/mlflow.db")
+    mlflow.set_tracking_uri(os.getenv("MLFLOW_TRACKING_URI", "sqlite:///mlflow.db"))
 
     # Use the same experiment name
     experiment_name = "iris_classification"

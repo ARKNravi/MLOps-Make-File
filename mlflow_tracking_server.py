@@ -8,7 +8,7 @@ if __name__ == "__main__":
     print(f"MLflow version: {mlflow.__version__}")
     
     # Define SQLite URI for model registry and experiment tracking
-    mlflow_tracking_uri = f"sqlite:///{os.path.abspath('mlflow.db')}"
+    mlflow_tracking_uri = os.getenv("MLFLOW_TRACKING_URI", f"sqlite:///{os.path.abspath('mlflow.db')}")
     mlflow.set_tracking_uri(mlflow_tracking_uri)
     
     print(f"MLflow Tracking URI: {mlflow_tracking_uri}")

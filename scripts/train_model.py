@@ -6,7 +6,7 @@ import mlflow.sklearn
 import os
 
 # Set SQLite-based tracking URI for both tracking and model registry
-mlflow.set_tracking_uri(f"sqlite:///{os.path.abspath('mlflow.db')}")
+mlflow.set_tracking_uri(os.getenv("MLFLOW_TRACKING_URI", "sqlite:///mlflow.db"))
 
 # Load processed data
 X_train = pd.read_csv('data/processed/X_train.csv')
@@ -30,6 +30,7 @@ with mlflow.start_run(experiment_id=experiment_id):
     mlflow.log_param("random_state", 42)
 
     # Save the model
+    os.makedirs('models', exist_ok=True)
     joblib.dump(model, 'models/iris_model.joblib')
     
     # Log the model to registry
