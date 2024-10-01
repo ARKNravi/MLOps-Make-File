@@ -44,7 +44,8 @@ deploy: evaluate
 # Start MLflow tracking server
 mlflow_server:
 	@echo "Starting MLflow tracking server..."
-	$(CONDA_ACTIVATE) python mlflow_tracking_server.py
+	@echo "Command: $(CONDA_ACTIVATE) python mlflow_tracking_server.py"
+	python mlflow_tracking_server.py
 
 # Clean up directories and remove the environment
 clean:
