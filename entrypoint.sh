@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Activate the Conda environment
 source activate mlops-makefile
 
