@@ -1,22 +1,8 @@
 version: "3"
 services:
-  mlops-app:
-    build: .
-    ports:
-      - "8080:5000"
-    volumes:
-      - .:/app
-    environment:
-      - MLFLOW_TRACKING_URI=sqlite:////app/mlflow.db
-    command: ["/entrypoint.sh"]
-
-  mlflow:
-    image: continuumio/miniconda3
-    ports:
-      - "5000:5000"
-    volumes:
-      - .:/app
-    working_dir: /app
-    environment:
-      - MLFLOW_TRACKING_URI=sqlite:////app/mlflow.db
-    command: /bin/bash -c "conda install mlflow -y && mlflow db upgrade sqlite:///mlflow.db && mlflow ui --backend-store-uri sqlite:///mlflow.db --host 0.0.0.0 --port 5000"
+    mlops-app:
+        build: .
+        ports:
+            - "5000:5000" # Map port 5000 only. The Dockerfile will dynamically change the exposed port if needed.
+        environment:
+            - MLFLOW_TRACKING_URI=sqlite:////app/mlflow.db
