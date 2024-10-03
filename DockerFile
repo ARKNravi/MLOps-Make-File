@@ -19,12 +19,11 @@ RUN if [ -d ".git" ]; then \
 # Check if the environment exists; if not, create it
 RUN conda env list | grep mlops-makefile || conda env create -f environment.yml
 
-# Activate the Conda environment, run make all, and start MLflow on an available port
+# Activate the Conda environment, run make all, and start MLflow on port 6000
 CMD ["bash", "-c", "\
     source activate mlops-makefile && \
     cd /app && \
-    make all && \
-    # Start with port 5000 and check for availability \
+    make mlflow_server && \
     port=6000; \
     while lsof -i :$port; do \
         echo Port $port is in use. Trying the next port...; \

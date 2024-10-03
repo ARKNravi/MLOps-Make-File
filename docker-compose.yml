@@ -3,6 +3,6 @@ services:
     mlops-app:
         build: .
         ports:
-            - "6000:6000" # Map port 5000 only. The Dockerfile will dynamically change the exposed port if needed.
+            - "6000:6000"  # Change the port mapping to 6000
         environment:
             - MLFLOW_TRACKING_URI=sqlite:////app/mlflow.db
