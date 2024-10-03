@@ -25,7 +25,7 @@ CMD ["bash", "-c", "\
     cd /app && \
     make all && \
     # Start with port 5000 and check for availability \
-    port=5000; \
+    port=6000; \
     while lsof -i :$port; do \
         echo Port $port is in use. Trying the next port...; \
         port=$((port + 1)); \

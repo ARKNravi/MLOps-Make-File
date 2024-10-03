@@ -14,11 +14,11 @@ if __name__ == "__main__":
     mlflow.set_tracking_uri(mlflow_tracking_uri)
     
     print(f"MLflow Tracking URI: {mlflow_tracking_uri}")
-    print("Starting MLflow UI. Access it at http://localhost:5000")
+    print("Starting MLflow UI. Access it at http://localhost:6000")
     
     mlflow_start_time = time.time()
     # Add '--host 0.0.0.0' to allow external connections when running locally
-    subprocess.run(["mlflow", "ui", "--port", "5000", "--host", "0.0.0.0", "--backend-store-uri", mlflow_tracking_uri])
+    subprocess.run(["mlflow", "ui", "--port", "6000", "--host", "0.0.0.0", "--backend-store-uri", mlflow_tracking_uri])
     
     print(f"MLflow UI started in {time.time() - mlflow_start_time:.2f} seconds.")
     print(f"Total time: {time.time() - start_time:.2f} seconds.")
