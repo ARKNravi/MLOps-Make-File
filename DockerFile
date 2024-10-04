@@ -25,14 +25,17 @@ RUN conda env list | grep mlops-makefile || conda env create -f environment.yml
 CMD ["bash", "-c", "\
     source activate mlops-makefile && \
     cd /app && \
-    make mlflow_server && \
-    make all && \
     port=7000; \
     while lsof -i :$port; do \
         echo Port $port is in use. Trying the next port...; \
         port=$((port + 1)); \
     done; \
     echo Using port $port; \
-    # Run MLflow UI on the available port \
+    # Start MLflow server in the background \
     mlflow ui --backend-store-uri sqlite:///mlflow.db --host 0.0.0.0 --port $port & \
-    make all"]
+    # Show the accessible localhost URL instead of 0.0.0.0 \
+    echo 'MLflow UI available at: http://localhost:'$port; \
+    # Run make all after MLflow UI starts \
+    make all && \
+    # Keep container running \
+    tail -f /dev/null"]
