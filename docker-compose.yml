@@ -3,6 +3,8 @@ services:
     mlops-app:
         build: .
         ports:
-            - "6000:6000"  # Change the port mapping to 6000
+            - "6000:6000"  # Ensure port 6000 is correctly mapped
         environment:
             - MLFLOW_TRACKING_URI=sqlite:////app/mlflow.db
+        expose:
+            - "6000"  # Optional: explicitly expose port 6000

@@ -1,23 +1,27 @@
 # Use an official Miniconda image as the base
 FROM continuumio/miniconda3
 
+# Set the working directory in the container
 WORKDIR /app
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y git make
 
-# Clone or pull the repository
+# Clone or pull the repository based on whether it exists
 RUN git clone https://github.com/ARKNravi/MLOps-Make-File.git .;
 
 # Check if the environment exists; if not, create it
 RUN conda env list | grep mlops-makefile || conda env create -f environment.yml
 
-# Change the port to a safe one
+# Expose the MLflow port 6000
+EXPOSE 6000
+
+# Activate the Conda environment, run make all, and start MLflow on port 6000
 CMD ["bash", "-c", "\
     source activate mlops-makefile && \
     cd /app && \
     make mlflow_server && \
-    port=5000; \
+    port=6000; \
     while lsof -i :$port; do \
         echo Port $port is in use. Trying the next port...; \
         port=$((port + 1)); \
