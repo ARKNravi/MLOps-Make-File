@@ -3,8 +3,7 @@ services:
     mlops-app:
         build: .
         ports:
-            - "127.0.0.1:6000:6000"  # Bind to localhost on port 6000
+            - "8080:8080"
         environment:
             - MLFLOW_TRACKING_URI=sqlite:////app/mlflow.db
-        expose:
-            - "6000"  # Optional: explicitly expose port 6000
+        network_mode: "host"  # Use host network mode
