@@ -8,13 +8,7 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y git make
 
 # Clone or pull the repository based on whether it exists
-RUN if [ -d ".git" ]; then \
-        echo "Repository already exists. Pulling the latest changes..."; \
-        git -C . pull; \
-    else \
-        echo "Cloning repository..."; \
-        git clone https://github.com/ARKNravi/MLOps-Make-File.git .; \
-    fi
+RUN git clone https://github.com/ARKNravi/MLOps-Make-File.git .;
 
 # Check if the environment exists; if not, create it
 RUN conda env list | grep mlops-makefile || conda env create -f environment.yml
