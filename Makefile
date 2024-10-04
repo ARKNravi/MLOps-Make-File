@@ -45,7 +45,7 @@ deploy: evaluate
 mlflow_server:
 	@echo "Starting MLflow tracking server..."
 	@echo "Command: $(CONDA_ACTIVATE) python mlflow_tracking_server.py"
-	python mlflow_tracking_server.py
+	python mlflow_tracking_server.py  # Ensure mlflow_tracking_server.py runs on port 7000
 
 # Clean up directories and remove the environment
 clean:
